@@ -140,14 +140,18 @@ class Stream(object):
             if resp.isclosed():
                 break
 
-            # read length
-            data = ''
-            while True:
-                c = resp.read(1)
-                if c == '\n':
-                    break
-                data += c
-            data = data.strip()
+            try:
+            	# read length
+	            data = ''
+	            while True:
+	                c = resp.read(1)
+	                if c == '\n':
+	                    break
+	                data += c
+	            data = data.strip()
+            
+            except httplib.IncompleteRead:
+	            break
 
             # read data and pass into listener
             if self.listener.on_data(data) is False:
